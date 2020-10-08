@@ -61,6 +61,7 @@ extensionBasedStructures[VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME] = StructureB
 
 //...Some other code...
 
+//Actually build VkInstanceCreateInfo chain
 StructureChainBlob<VkInstanceCreateInfo> instanceCreateInfoChain;
 for(const std::string& extension: requestedExtensions)
 {
