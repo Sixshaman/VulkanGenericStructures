@@ -1732,24 +1732,24 @@ inline Struct& GenericStructBase::GetDataAs()
 	return *structureData;
 }
 
-std::byte* GenericStructBase::GetStructureData() const
+inline std::byte* GenericStructBase::GetStructureData() const
 {
 	assert(GetStructureSize() != 0);
 
 	return StructureData;
 }
 
-size_t GenericStructBase::GetStructureSize() const
+inline size_t GenericStructBase::GetStructureSize() const
 {
 	return StructureSize;
 }
 
-ptrdiff_t GenericStructBase::GetPNextOffset() const
+inline ptrdiff_t GenericStructBase::GetPNextOffset() const
 {
 	return PNextPointerOffset;
 }
 
-void* GenericStructBase::GetPNext() const
+inline void* GenericStructBase::GetPNext() const
 {
 	assert(PNextPointerOffset + sizeof(void*) <= GetStructureSize());
 
@@ -1759,12 +1759,12 @@ void* GenericStructBase::GetPNext() const
 	return pNext;
 }
 
-ptrdiff_t GenericStructBase::GetSTypeOffset() const
+inline ptrdiff_t GenericStructBase::GetSTypeOffset() const
 {
 	return STypeOffset;
 }
 
-VulkanStructureType GenericStructBase::GetSType() const
+inline VulkanStructureType GenericStructBase::GetSType() const
 {
 	assert(STypeOffset + sizeof(VulkanStructureType) <= GetStructureSize());
 
@@ -1799,7 +1799,7 @@ inline GenericStruct::GenericStruct(const GenericStruct& right): GenericStructBa
 {
 }
 
-GenericStruct& GenericStruct::operator=(const GenericStruct& right)
+inline GenericStruct& GenericStruct::operator=(const GenericStruct& right)
 {
 	StructureData      = right.StructureData;
 	StructureSize      = right.StructureSize;
@@ -1827,7 +1827,7 @@ private:
 	std::vector<std::byte> StructureDataBlob;
 };
 
-StructureBlob::StructureBlob()
+inline StructureBlob::StructureBlob()
 {
 	PNextPointerOffset = 0;
 	STypeOffset        = 0;
@@ -1856,7 +1856,7 @@ inline StructureBlob::StructureBlob(const StructureBlob& right)
 	*this = right;
 }
 
-StructureBlob& StructureBlob::operator=(const StructureBlob& right)
+inline StructureBlob& StructureBlob::operator=(const StructureBlob& right)
 {
 	StructureDataBlob.assign(right.StructureDataBlob.begin(), right.StructureDataBlob.end());
 
