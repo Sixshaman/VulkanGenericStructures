@@ -31,7 +31,7 @@ Classes:
 (Assumes all passed structures have initialized `sType`)
 ```cpp
 
-GenericStructureChain<vk::PhysicalDeviceFeatures2> physicalDeviceFeaturesChain;
+vgs::GenericStructureChain<vk::PhysicalDeviceFeatures2> physicalDeviceFeaturesChain;
 physicalDeviceFeaturesChain.AppendToChain(mVulkan11Features);                    //VkPhysicalDeviceVulkan11Features
 physicalDeviceFeaturesChain.AppendToChain(mBlendOperationAdvancedFeatures);      //VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT
 physicalDeviceFeaturesChain.AppendToChain(mBufferDeviceAddressFeatures);         //VkPhysicalDeviceBufferDeviceAddressFeatures
@@ -53,16 +53,16 @@ No more ridiculous `vulkan.hpp` types such as `vk::StructureChain<vk::Struct1, v
 
 Now it works like a charm:
 ```cpp
-std::unordered_map<std::string, StructureBlob> extensionBasedStructures;
+std::unordered_map<std::string, vgs::StructureBlob> extensionBasedStructures;
 
 //Init the map, maybe manually or from a config or whatever
-extensionBasedStructures[VK_EXT_DEBUG_REPORT_EXTENSION_NAME]        = StructureBlob(debugReportCallbackParameters);
-extensionBasedStructures[VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME] = StructureBlob(validationFeatureParameters);
+extensionBasedStructures[VK_EXT_DEBUG_REPORT_EXTENSION_NAME]        = vgs::StructureBlob(debugReportCallbackParameters);
+extensionBasedStructures[VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME] = vgs::StructureBlob(validationFeatureParameters);
 
 //...Some other code...
 
 //Actually build VkInstanceCreateInfo chain
-StructureChainBlob<VkInstanceCreateInfo> instanceCreateInfoChain;
+vgs::StructureChainBlob<VkInstanceCreateInfo> instanceCreateInfoChain;
 for(const std::string& extension: requestedExtensions)
 {
   if(availableExtensions.contains(extension))
