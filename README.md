@@ -1,7 +1,7 @@
 # VulkanGenericStructures
 A small header-only library for chaining structures in Vulkan.
 
-## Building
+## Building from scratch
 
 Execute the command: `python GenerateHeaders.py`
 
