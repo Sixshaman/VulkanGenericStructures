@@ -72,3 +72,7 @@ for(const std::string& extension: requestedExtensions)
 }
 
 ```
+
+## Current issues
+
+All structure duplicates are not supported for now.
