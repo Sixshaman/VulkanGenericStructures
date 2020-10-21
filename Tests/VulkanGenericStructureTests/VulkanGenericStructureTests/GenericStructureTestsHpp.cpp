@@ -15,52 +15,9 @@ GenericStructureTestsHpp::~GenericStructureTestsHpp()
 
 void GenericStructureTestsHpp::DoTests()
 {
-	TestGenericStructure();
 	TestStructureBlob();
 	TestGenericStructureChain();
 	TestStructureChainBlob();
-}
-
-void GenericStructureTestsHpp::TestGenericStructure()
-{
-	//Common tests
-	vk::InstanceCreateInfo               instanceCreateInfo;
-	vk::DebugReportCallbackCreateInfoEXT debugReportCallbackCreateInfo;
-
-	instanceCreateInfo.pNext = &debugReportCallbackCreateInfo;
-
-	vgs::GenericStruct genericInstanceCreateInfo(instanceCreateInfo);
-	assert(genericInstanceCreateInfo.GetStructureData() == reinterpret_cast<std::byte*>(&instanceCreateInfo));
-	assert(genericInstanceCreateInfo.GetSType()         == vk::StructureType::eInstanceCreateInfo);
-	assert(genericInstanceCreateInfo.GetPNext()         == &debugReportCallbackCreateInfo);
-
-	vgs::GenericStruct genericDebugReportCallbackCreateInfo(debugReportCallbackCreateInfo);
-	assert(genericDebugReportCallbackCreateInfo.GetStructureData() == reinterpret_cast<std::byte*>(&debugReportCallbackCreateInfo));
-	assert(genericDebugReportCallbackCreateInfo.GetSType()         == vk::StructureType::eDebugReportCallbackCreateInfoEXT);
-	assert(genericInstanceCreateInfo.GetPNext()                    == genericDebugReportCallbackCreateInfo.GetStructureData());
-
-	vk::InstanceCreateInfo&               instanceCreateInfo2            = genericInstanceCreateInfo.GetDataAs<vk::InstanceCreateInfo>();
-	vk::DebugReportCallbackCreateInfoEXT& debugReportCallbackCreateInfo2 = genericDebugReportCallbackCreateInfo.GetDataAs<vk::DebugReportCallbackCreateInfoEXT>();
-	
-	assert(instanceCreateInfo2.pNext == &debugReportCallbackCreateInfo);
-	assert(instanceCreateInfo.pNext  == &debugReportCallbackCreateInfo2);
-
-	instanceCreateInfo2.enabledLayerCount = 1;
-	assert(instanceCreateInfo.enabledLayerCount == 1);
-
-	//Operator= test
-	vgs::GenericStruct genericInstanceCreateInfo2 = instanceCreateInfo;
-	assert(genericInstanceCreateInfo2.GetStructureData() == reinterpret_cast<std::byte*>(&instanceCreateInfo));
-	assert(genericInstanceCreateInfo2.GetSType()         == vk::StructureType::eInstanceCreateInfo);
-	assert(genericInstanceCreateInfo2.GetPNext()         == &debugReportCallbackCreateInfo);
-
-	//Copy constructor test
-	std::vector<vgs::GenericStruct> genericStructs;
-	genericStructs.emplace_back(instanceCreateInfo);
-	genericStructs.emplace_back(debugReportCallbackCreateInfo);
-
-	assert(genericStructs[0].GetPNext()         == genericStructs[1].GetStructureData());
-	assert(genericStructs[0].GetStructureData() == reinterpret_cast<std::byte*>(&instanceCreateInfo));
 }
 
 void GenericStructureTestsHpp::TestStructureBlob()
@@ -69,14 +26,11 @@ void GenericStructureTestsHpp::TestStructureBlob()
 	vk::InstanceCreateInfo               instanceCreateInfo;
 	vk::DebugReportCallbackCreateInfoEXT debugReportCallbackCreateInfo;
 
-	instanceCreateInfo.pNext            = &debugReportCallbackCreateInfo;
-	debugReportCallbackCreateInfo.pNext = nullptr;
-
 	//Data should be different, but other contents, including pNext, should be left untouched
 	vgs::StructureBlob instanceCreateInfoBlob(instanceCreateInfo);
 	assert(instanceCreateInfoBlob.GetStructureData() != reinterpret_cast<std::byte*>(&instanceCreateInfo));
 	assert(instanceCreateInfoBlob.GetSType()         == vk::StructureType::eInstanceCreateInfo);
-	assert(instanceCreateInfoBlob.GetPNext()         == &debugReportCallbackCreateInfo);
+	assert(instanceCreateInfoBlob.GetPNext()         == nullptr);
 
 	vgs::StructureBlob debugReportCallbackCreateInfoBlob(debugReportCallbackCreateInfo);
 	assert(debugReportCallbackCreateInfoBlob.GetStructureData() != reinterpret_cast<std::byte*>(&debugReportCallbackCreateInfo));
@@ -144,7 +98,7 @@ void GenericStructureTestsHpp::TestGenericStructureChain()
 	vgs::StructureBlob meshShaderFeatures(meshShaderFeaturesBaseStruct);
 
 	vk::PhysicalDeviceDeviceGeneratedCommandsFeaturesNV deviceGeneratedCommandsFeaturesBaseStruct;
-	vgs::GenericStruct deviceGeneratedCommandsFeatures(deviceGeneratedCommandsFeaturesBaseStruct);
+	vgs::StructureBlob deviceGeneratedCommandsFeatures(deviceGeneratedCommandsFeaturesBaseStruct);
 
 	vgs::GenericStructureChain<vk::PhysicalDeviceFeatures2> physicalDeviceFeatures2Chain;
 	physicalDeviceFeatures2Chain.AppendToChain(vulkan11Features);
@@ -248,7 +202,7 @@ void GenericStructureTestsHpp::TestStructureChainBlob()
 		vgs::StructureBlob meshShaderFeatures(meshShaderFeaturesBaseStruct);
 
 		vk::PhysicalDeviceDeviceGeneratedCommandsFeaturesNV deviceGeneratedCommandsFeaturesBaseStruct;
-		vgs::GenericStruct deviceGeneratedCommandsFeatures(deviceGeneratedCommandsFeaturesBaseStruct);
+		vgs::StructureBlob deviceGeneratedCommandsFeatures(deviceGeneratedCommandsFeaturesBaseStruct);
 
 		physicalDeviceFeatures2Chain.AppendToChain(vulkan11Features);
 		physicalDeviceFeatures2Chain.AppendToChain(imagelessFramebufferFeatures);
