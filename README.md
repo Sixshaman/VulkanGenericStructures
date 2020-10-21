@@ -19,16 +19,14 @@ Just copy the file you need to your project directory.
 This library uses `namespace vgs` for its parts.
 
 Classes:
-- `GenericStruct` — non-owning view of any Vulkan structure that contains `sType` and `pNext` members. Can only be used in scope of the original structure variable.
-- `StructureBlob` — owning blob of any Vulkan structure that contains `sType` and `pNext` members. Can be freely passed outside of scope and returned from the functions (with the exception if the structure members reference memory).
-- `GenericStructureChain` — non-owning structure chain builder. Provides `AppendToChain` and `AppendToChainGeneric` (for generic structure classes) methods which assigns last `pNext` member of the chain to the provided structure. Can only be used in scope of all structure variables that form it.
+- `StructureBlob` — typeless blob of any Vulkan structure that contains `sType` and `pNext` members. Can be freely passed outside of scope and returned from the functions (with the exception if the structure members reference outside memory).
+- `GenericStructureChain` — non-owning structure chain builder. Provides `AppendToChain` and `AppendToChainGeneric` (for `StructureBlob`) methods which assigns last `pNext` member of the chain to the provided structure. Can only be used in scope of all structure variables that form it.
 - `StructureChainBlob` — owning structure chain builder. Can be freely passed outside of scope and returned from functions (with the exception if the structure members reference memory).
 
 ## Usage
 
-### Initializing all members for VkPhysicalDeviceFeatures2 chain
+### Initializing all members for VkPhysicalDeviceFeatures2 chain, with automatic sType and pNext initialization
 
-(Assumes all passed structures have initialized `sType`)
 ```cpp
 
 vgs::GenericStructureChain<vk::PhysicalDeviceFeatures2> physicalDeviceFeaturesChain;
