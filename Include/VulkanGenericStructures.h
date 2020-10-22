@@ -1707,26 +1707,20 @@ static inline void InitSType(void* ptr, ptrdiff_t offset, VulkanStructureType va
 
 //==========================================================================================================================
 
-//Type-erased Vulkan structure
-class StructureBlob
+//Base interface for StructureBlob(owning type-erased structure) and GenericStructureView(non-owning type-erased structure)
+class GenericStructBase
 {
-public:
-	StructureBlob();
-	~StructureBlob();
-
-	StructureBlob(const StructureBlob& right);
-	StructureBlob& operator=(const StructureBlob& right);
-
-	template<typename Struct>
-	StructureBlob(const Struct& structure);
+protected:
+	GenericStructBase();
+	GenericStructBase(std::byte* data, size_t dataSize, ptrdiff_t pNextOffset, ptrdiff_t sTypeOffset);
+	~GenericStructBase();
 
 public:
 	template<typename Struct>
 	Struct& GetDataAs();
 
-	std::byte*       GetStructureData();
-	const std::byte* GetStructureData() const;
-	size_t           GetStructureSize() const;
+	std::byte* GetStructureData() const;
+	size_t     GetStructureSize() const;
 
 	ptrdiff_t GetPNextOffset() const;
 	void*     GetPNext()       const;
@@ -1735,16 +1729,146 @@ public:
 	VulkanStructureType GetSType()       const;
 
 protected:
-	std::vector<std::byte> StructureBlobData;
+	std::byte* StructureData;
+	size_t     StructureSize;
 
 	ptrdiff_t PNextPointerOffset;
 	ptrdiff_t STypeOffset;
 };
 
-inline StructureBlob::StructureBlob(): PNextPointerOffset(0), STypeOffset(0)
+inline GenericStructBase::GenericStructBase(): StructureData(nullptr), StructureSize(0), PNextPointerOffset(0), STypeOffset(0)
 {
 }
 
+inline GenericStructBase::GenericStructBase(std::byte* data, size_t dataSize, ptrdiff_t pNextOffset, ptrdiff_t sTypeOffset): StructureData(data), StructureSize(dataSize), PNextPointerOffset(pNextOffset), STypeOffset(sTypeOffset)
+{
+}
+
+inline GenericStructBase::~GenericStructBase()
+{
+}
+
+template<typename Struct>
+inline Struct& GenericStructBase::GetDataAs()
+{
+	assert(GetStructureSize() == sizeof(Struct));
+	assert(StructureData != nullptr);
+
+	Struct* structureData = reinterpret_cast<Struct*>(StructureData);
+	return *structureData;
+}
+
+inline std::byte* GenericStructBase::GetStructureData() const
+{
+	assert(GetStructureSize() != 0);
+
+	return StructureData;
+}
+
+inline size_t GenericStructBase::GetStructureSize() const
+{
+	return StructureSize;
+}
+
+inline ptrdiff_t GenericStructBase::GetPNextOffset() const
+{
+	return PNextPointerOffset;
+}
+
+inline void* GenericStructBase::GetPNext() const
+{
+	assert(PNextPointerOffset + sizeof(void*) <= GetStructureSize());
+
+	void* pNext = nullptr;
+	memcpy(&pNext, StructureData + PNextPointerOffset, sizeof(void*));
+
+	return pNext;
+}
+
+inline ptrdiff_t GenericStructBase::GetSTypeOffset() const
+{
+	return STypeOffset;
+}
+
+inline VulkanStructureType GenericStructBase::GetSType() const
+{
+	assert(STypeOffset + sizeof(VulkanStructureType) <= GetStructureSize());
+
+	VulkanStructureType sType;
+	memcpy(&sType, StructureData + STypeOffset, sizeof(VulkanStructureType));
+
+	return sType;
+}
+
+//==========================================================================================================================
+
+//Non-owning version of a generic structure
+class GenericStruct: public GenericStructBase
+{
+public:
+	template<typename Struct>
+	GenericStruct(Struct& structure);
+
+	//The copy constructor should be template-specialized, because <const GenericStructureView&> can be passed as a <Struct&>
+	template<>
+	GenericStruct(const GenericStruct& right);
+	GenericStruct& operator=(const GenericStruct& right);
+};
+
+template<typename Struct>
+inline GenericStruct::GenericStruct(Struct& structure): GenericStructBase(reinterpret_cast<std::byte*>(&structure), sizeof(Struct), offsetof(Struct, pNext), offsetof(Struct, sType))
+{
+}
+
+template<>
+inline GenericStruct::GenericStruct(const GenericStruct& right): GenericStructBase(right.StructureData, right.StructureSize, right.PNextPointerOffset, right.STypeOffset)
+{
+}
+
+inline GenericStruct& GenericStruct::operator=(const GenericStruct& right)
+{
+	StructureData      = right.StructureData;
+	StructureSize      = right.StructureSize;
+	STypeOffset        = right.STypeOffset;
+	PNextPointerOffset = right.PNextPointerOffset;
+
+	return *this;
+}
+
+//Creates a GenericStruct and automatically fills in sType (a side effect which is undesireable in constructors)
+template<typename Struct>
+inline GenericStruct TransmuteTypeToSType(Struct& structure)
+{
+	InitSType(&structure, offsetof(Struct, sType), ValidStructureType<Struct>);
+	return GenericStruct(structure);
+}
+
+//==========================================================================================================================
+
+//Owning version of a generic structure
+class StructureBlob: public GenericStructBase
+{
+public:
+	StructureBlob();
+
+	StructureBlob(const StructureBlob& right);
+	StructureBlob& operator=(const StructureBlob& right);
+
+	template<typename Struct>
+	StructureBlob(const Struct& structure);
+
+private:
+	std::vector<std::byte> StructureBlobData;
+};
+
+inline StructureBlob::StructureBlob()
+{
+	PNextPointerOffset = 0;
+	STypeOffset        = 0;
+
+	StructureData = nullptr;
+	StructureSize = 0;
+}
 
 template<typename Struct>
 inline StructureBlob::StructureBlob(const Struct& structure)
@@ -1757,75 +1881,15 @@ inline StructureBlob::StructureBlob(const Struct& structure)
 	StructureBlobData.resize(sizeof(Struct));
 	memcpy(StructureBlobData.data(), &structure, sizeof(Struct));
 
+	StructureData = StructureBlobData.data();
+	StructureSize = StructureBlobData.size();
+
 	//Init sType and set pNext to null
 	VulkanStructureType structureType = ValidStructureType<Struct>;
 	InitSType(StructureBlobData.data(), STypeOffset, structureType);
 
 	void* nullPNext = nullptr;
 	memcpy(StructureBlobData.data() + PNextPointerOffset, &nullPNext, sizeof(void*));
-}
-
-inline StructureBlob::~StructureBlob()
-{
-}
-
-template<typename Struct>
-inline Struct& StructureBlob::GetDataAs()
-{
-	assert(GetStructureSize() == sizeof(Struct));
-	assert(GetStructureData() != nullptr);
-
-	Struct* structureData = reinterpret_cast<Struct*>(StructureBlobData.data());
-	return *structureData;
-}
-
-inline std::byte* StructureBlob::GetStructureData()
-{
-	assert(GetStructureSize() != 0);
-
-	return StructureBlobData.data();
-}
-
-inline const std::byte* StructureBlob::GetStructureData() const
-{
-	assert(GetStructureSize() != 0);
-
-	return StructureBlobData.data();
-}
-
-inline size_t StructureBlob::GetStructureSize() const
-{
-	return StructureBlobData.size();
-}
-
-inline ptrdiff_t StructureBlob::GetPNextOffset() const
-{
-	return PNextPointerOffset;
-}
-
-inline void* StructureBlob::GetPNext() const
-{
-	assert(PNextPointerOffset + sizeof(void*) <= GetStructureSize());
-
-	void* pNext = nullptr;
-	memcpy(&pNext, StructureBlobData.data() + PNextPointerOffset, sizeof(void*));
-
-	return pNext;
-}
-
-inline ptrdiff_t StructureBlob::GetSTypeOffset() const
-{
-	return STypeOffset;
-}
-
-inline VulkanStructureType StructureBlob::GetSType() const
-{
-	assert(STypeOffset + sizeof(VulkanStructureType) <= GetStructureSize());
-
-	VulkanStructureType sType;
-	memcpy(&sType, StructureBlobData.data() + STypeOffset, sizeof(VulkanStructureType));
-
-	return sType;
 }
 
 inline StructureBlob::StructureBlob(const StructureBlob& right)
@@ -1836,6 +1900,9 @@ inline StructureBlob::StructureBlob(const StructureBlob& right)
 inline StructureBlob& StructureBlob::operator=(const StructureBlob& right)
 {
 	StructureBlobData.assign(right.StructureBlobData.begin(), right.StructureBlobData.end());
+
+	StructureData = StructureBlobData.data();
+	StructureSize = StructureBlobData.size();
 
 	STypeOffset        = right.STypeOffset;
 	PNextPointerOffset = right.PNextPointerOffset;
@@ -1926,7 +1993,7 @@ public:
 	template<typename Struct>
 	void AppendToChain(Struct& next);
 
-	void AppendToChainGeneric(StructureBlob& nextBlobData);
+	void AppendToChainGeneric(GenericStructBase& nextBlobData);
 
 public:
 	GenericStructureChain(const GenericStructureChain& rhs) = delete;
@@ -2000,7 +2067,7 @@ inline void GenericStructureChain<HeadType>::AppendToChain(Struct& next)
 }
 
 template<typename HeadType>
-inline void GenericStructureChain<HeadType>::AppendToChainGeneric(StructureBlob& nextBlobData)
+inline void GenericStructureChain<HeadType>::AppendToChainGeneric(GenericStructBase& nextBlobData)
 {
 	AppendDataToChain(nextBlobData.GetStructureData(), nextBlobData.GetSTypeOffset(), nextBlobData.GetPNextOffset(), nextBlobData.GetSType());
 }
@@ -2044,7 +2111,7 @@ public:
 	template<typename Struct>
 	void AppendToChain(const Struct& next);
 
-	void AppendToChainGeneric(const StructureBlob& nextBlobData);
+	void AppendToChainGeneric(const GenericStructBase& nextBlobData);
 
 public:
 	StructureChainBlob(const StructureChainBlob& rhs)            = delete;
@@ -2141,11 +2208,11 @@ inline void StructureChainBlob<HeadType>::AppendToChain(const Struct& next)
 {
 	static_assert(std::is_trivially_destructible<Struct>::value, "All members of the structure chain blob must be trivially destructible");
 
-	AppendDataToBlob((const std::byte*)(&next), sizeof(Struct), next.pNext, offsetof(Struct, sType), offsetof(Struct, pNext), next.sType);
+	AppendDataToBlob((const std::byte*)(&next), sizeof(Struct), next.pNext, offsetof(Struct, sType), offsetof(Struct, pNext), ValidStructureType<Struct>);
 }
 
 template<typename HeadType>
-inline void StructureChainBlob<HeadType>::AppendToChainGeneric(const StructureBlob& nextBlobData)
+inline void StructureChainBlob<HeadType>::AppendToChainGeneric(const GenericStructBase& nextBlobData)
 {
 	AppendDataToBlob(nextBlobData.GetStructureData(), nextBlobData.GetStructureSize(), nextBlobData.GetPNext(), nextBlobData.GetSTypeOffset(), nextBlobData.GetPNextOffset(), nextBlobData.GetSType());
 }

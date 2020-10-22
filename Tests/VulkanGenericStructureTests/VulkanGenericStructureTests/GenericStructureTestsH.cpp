@@ -15,9 +15,64 @@ GenericStructureTestsH::~GenericStructureTestsH()
 
 void GenericStructureTestsH::DoTests()
 {
+	TestGenericStructure();
 	TestStructureBlob();
 	TestGenericStructureChain();
 	TestStructureChainBlob();
+}
+
+void GenericStructureTestsH::TestGenericStructure()
+{
+	//Common tests
+	VkInstanceCreateInfo               instanceCreateInfo;
+	VkDebugReportCallbackCreateInfoEXT debugReportCallbackCreateInfo;
+
+	debugReportCallbackCreateInfo.sType = VK_STRUCTURE_TYPE_MAX_ENUM; //Deliberately wrong
+
+	instanceCreateInfo.pNext = &debugReportCallbackCreateInfo;
+
+	//Data references should be saved
+	vgs::GenericStruct genericInstanceCreateInfo = vgs::TransmuteTypeToSType(instanceCreateInfo);
+	assert(genericInstanceCreateInfo.GetStructureData() == reinterpret_cast<std::byte*>(&instanceCreateInfo));
+	assert(genericInstanceCreateInfo.GetSType()         == VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO);
+	assert(genericInstanceCreateInfo.GetPNext()         == &debugReportCallbackCreateInfo);
+
+	vgs::GenericStruct genericDebugReportCallbackCreateInfo(debugReportCallbackCreateInfo);
+	assert(genericDebugReportCallbackCreateInfo.GetStructureData() == reinterpret_cast<std::byte*>(&debugReportCallbackCreateInfo));
+	assert(genericDebugReportCallbackCreateInfo.GetSType()         == VK_STRUCTURE_TYPE_MAX_ENUM); //Regular struct creating SHOULD NOT mess with original sType
+	assert(genericInstanceCreateInfo.GetPNext()                    == genericDebugReportCallbackCreateInfo.GetStructureData());
+
+	VkInstanceCreateInfo&               instanceCreateInfo2            = genericInstanceCreateInfo.GetDataAs<VkInstanceCreateInfo>();
+	VkDebugReportCallbackCreateInfoEXT& debugReportCallbackCreateInfo2 = genericDebugReportCallbackCreateInfo.GetDataAs<VkDebugReportCallbackCreateInfoEXT>();
+	
+	assert(instanceCreateInfo2.pNext == &debugReportCallbackCreateInfo);
+	assert(instanceCreateInfo.pNext  == &debugReportCallbackCreateInfo2);
+
+	//Can change structure data from the value of GetDataAs
+	instanceCreateInfo2.enabledLayerCount = 1;
+	assert(instanceCreateInfo.enabledLayerCount == 1);
+
+	//Operator= test
+	vgs::GenericStruct genericInstanceCreateInfo2 = instanceCreateInfo;
+	assert(genericInstanceCreateInfo2.GetStructureData() == reinterpret_cast<std::byte*>(&instanceCreateInfo));
+	assert(genericInstanceCreateInfo2.GetSType()         == VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO);
+	assert(genericInstanceCreateInfo2.GetPNext()         == &debugReportCallbackCreateInfo);
+
+	//Emplacement test
+	std::vector<vgs::GenericStruct> genericStructs;
+	genericStructs.emplace_back(instanceCreateInfo);
+	genericStructs.emplace_back(debugReportCallbackCreateInfo);
+
+	assert(genericStructs[0].GetPNext()         == genericStructs[1].GetStructureData());
+	assert(genericStructs[0].GetStructureData() == reinterpret_cast<std::byte*>(&instanceCreateInfo));
+
+	//Copy constructor test
+	std::vector<vgs::GenericStruct> genericStructs2;
+	genericStructs2.push_back(genericInstanceCreateInfo);
+	genericStructs2.push_back(genericDebugReportCallbackCreateInfo);
+
+	assert(genericStructs2[0].GetPNext()         == genericStructs2[1].GetStructureData());
+	assert(genericStructs2[0].GetStructureData() == reinterpret_cast<std::byte*>(&instanceCreateInfo));
 }
 
 void GenericStructureTestsH::TestStructureBlob()
@@ -26,6 +81,10 @@ void GenericStructureTestsH::TestStructureBlob()
 	VkInstanceCreateInfo               instanceCreateInfo;
 	VkDebugReportCallbackCreateInfoEXT debugReportCallbackCreateInfo;
 
+	instanceCreateInfo.pNext            = &debugReportCallbackCreateInfo;
+	debugReportCallbackCreateInfo.pNext = nullptr;
+
+	//Data should be different, but other contents, including pNext, should be left untouched
 	vgs::StructureBlob instanceCreateInfoBlob(instanceCreateInfo);
 	assert(instanceCreateInfoBlob.GetStructureData() != reinterpret_cast<std::byte*>(&instanceCreateInfo));
 	assert(instanceCreateInfoBlob.GetSType()         == VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO);
@@ -93,11 +152,11 @@ void GenericStructureTestsH::TestGenericStructureChain()
 
 	//Test generic structures too
 	VkPhysicalDeviceMeshShaderFeaturesNV meshShaderFeaturesBaseStruct;
-	meshShaderFeaturesBaseStruct.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_NV;
 	vgs::StructureBlob meshShaderFeatures(meshShaderFeaturesBaseStruct);
 
 	VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV deviceGeneratedCommandsFeaturesBaseStruct;
-	vgs::StructureBlob deviceGeneratedCommandsFeatures(deviceGeneratedCommandsFeaturesBaseStruct);
+	deviceGeneratedCommandsFeaturesBaseStruct.pNext = nullptr;
+	vgs::GenericStruct deviceGeneratedCommandsFeatures = vgs::TransmuteTypeToSType(deviceGeneratedCommandsFeaturesBaseStruct); //sType should be already initialized in GenericStruct
 
 	vgs::GenericStructureChain<VkPhysicalDeviceFeatures2> physicalDeviceFeatures2Chain;
 	physicalDeviceFeatures2Chain.AppendToChain(vulkan11Features);
@@ -109,12 +168,6 @@ void GenericStructureTestsH::TestGenericStructureChain()
 	physicalDeviceFeatures2Chain.AppendToChainGeneric(deviceGeneratedCommandsFeatures);
 
 	auto& physicalDeviceFeatures2 = physicalDeviceFeatures2Chain.GetChainHead();
-
-	assert(physicalDeviceFeatures2.sType             == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2);
-	assert(vulkan11Features.sType                    == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES);
-	assert(imagelessFramebufferFeatures.sType        == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES);
-	assert(uniformBufferStandardLayoutFeatures.sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES);
-	assert(vulkanMemoryModelFeatures.sType           == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES);
 
 	assert(physicalDeviceFeatures2.pNext              == &vulkan11Features);
 	assert(vulkan11Features.pNext                     == &imagelessFramebufferFeatures);
@@ -131,6 +184,14 @@ void GenericStructureTestsH::TestGenericStructureChain()
 	assert(&physicalDeviceFeatures2Chain.GetChainLinkDataAs<VkPhysicalDeviceVulkanMemoryModelFeatures>()           == &vulkanMemoryModelFeatures);
 	assert(&physicalDeviceFeatures2Chain.GetChainLinkDataAs<VkPhysicalDeviceMeshShaderFeaturesNV>()                == reinterpret_cast<VkPhysicalDeviceMeshShaderFeaturesNV*>(meshShaderFeatures.GetStructureData()));
 	assert(&physicalDeviceFeatures2Chain.GetChainLinkDataAs<VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV>()   == reinterpret_cast<VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV*>(deviceGeneratedCommandsFeatures.GetStructureData()));
+	
+	//Test sType initialization
+	assert(physicalDeviceFeatures2Chain.GetChainLinkDataAs<VkPhysicalDeviceVulkan11Features>().sType                    == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES);
+	assert(physicalDeviceFeatures2Chain.GetChainLinkDataAs<VkPhysicalDeviceImagelessFramebufferFeatures>().sType        == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES);
+	assert(physicalDeviceFeatures2Chain.GetChainLinkDataAs<VkPhysicalDeviceUniformBufferStandardLayoutFeatures>().sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES);
+	assert(physicalDeviceFeatures2Chain.GetChainLinkDataAs<VkPhysicalDeviceVulkanMemoryModelFeatures>().sType           == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES);
+	assert(physicalDeviceFeatures2Chain.GetChainLinkDataAs<VkPhysicalDeviceMeshShaderFeaturesNV>().sType                == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_NV);
+	assert(physicalDeviceFeatures2Chain.GetChainLinkDataAs<VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV>().sType   == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV);
 
 	//Test structure filling
 	VkBaseOutStructure* currStruct = reinterpret_cast<VkBaseOutStructure*>(&physicalDeviceFeatures2);
@@ -198,23 +259,18 @@ void GenericStructureTestsH::TestStructureChainBlob()
 	VkPhysicalDeviceVulkan11Features             vulkan11Features;
 	VkPhysicalDeviceImagelessFramebufferFeatures imagelessFramebufferFeatures;
 
-	vulkan11Features.sType             = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
-	imagelessFramebufferFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES;
 	{
 		//Test local variables
 		VkPhysicalDeviceUniformBufferStandardLayoutFeatures uniformBufferStandardLayoutFeatures;
 		VkPhysicalDeviceVulkanMemoryModelFeatures           vulkanMemoryModelFeatures;
 
-		uniformBufferStandardLayoutFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES;
-		vulkanMemoryModelFeatures.sType           = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES;
-
 		//Test generic structures too
 		VkPhysicalDeviceMeshShaderFeaturesNV meshShaderFeaturesBaseStruct;
-		meshShaderFeaturesBaseStruct.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_NV;
 		vgs::StructureBlob meshShaderFeatures(meshShaderFeaturesBaseStruct);
 
 		VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV deviceGeneratedCommandsFeaturesBaseStruct;
-		vgs::StructureBlob deviceGeneratedCommandsFeatures(deviceGeneratedCommandsFeaturesBaseStruct);
+		deviceGeneratedCommandsFeaturesBaseStruct.pNext = nullptr;
+		vgs::GenericStruct deviceGeneratedCommandsFeatures = vgs::TransmuteTypeToSType(deviceGeneratedCommandsFeaturesBaseStruct);
 
 		physicalDeviceFeatures2Chain.AppendToChain(vulkan11Features);
 		physicalDeviceFeatures2Chain.AppendToChain(imagelessFramebufferFeatures);
@@ -225,7 +281,6 @@ void GenericStructureTestsH::TestStructureChainBlob()
 		physicalDeviceFeatures2Chain.AppendToChainGeneric(deviceGeneratedCommandsFeatures);
 
 		auto& physicalDeviceFeatures2 = physicalDeviceFeatures2Chain.GetChainHead();
-		physicalDeviceFeatures2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
 
 		//Test structure filling
 		VkBaseOutStructure* currStruct = reinterpret_cast<VkBaseOutStructure*>(&physicalDeviceFeatures2);
@@ -288,6 +343,14 @@ void GenericStructureTestsH::TestStructureChainBlob()
 	assert(testVulkanMemoryModelFeatures.pNext            == &testMeshShaderFeatures);
 	assert(testMeshShaderFeatures.pNext                   == &testDeviceGeneratedCommandsFeatures);
 	assert(testDeviceGeneratedCommandsFeatures.pNext      == nullptr);
+
+	//Test sType initialization
+	assert(physicalDeviceFeatures2Chain.GetChainLinkDataAs<VkPhysicalDeviceVulkan11Features>().sType                    == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES);
+	assert(physicalDeviceFeatures2Chain.GetChainLinkDataAs<VkPhysicalDeviceImagelessFramebufferFeatures>().sType        == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGELESS_FRAMEBUFFER_FEATURES);
+	assert(physicalDeviceFeatures2Chain.GetChainLinkDataAs<VkPhysicalDeviceUniformBufferStandardLayoutFeatures>().sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFORM_BUFFER_STANDARD_LAYOUT_FEATURES);
+	assert(physicalDeviceFeatures2Chain.GetChainLinkDataAs<VkPhysicalDeviceVulkanMemoryModelFeatures>().sType           == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES);
+	assert(physicalDeviceFeatures2Chain.GetChainLinkDataAs<VkPhysicalDeviceMeshShaderFeaturesNV>().sType                == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_NV);
+	assert(physicalDeviceFeatures2Chain.GetChainLinkDataAs<VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV>().sType   == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV);
 
 	assert(physicalDeviceFeatures2Chain.GetChainHead().features.geometryShader);
 	assert(physicalDeviceFeatures2Chain.GetChainHead().features.tessellationShader);
