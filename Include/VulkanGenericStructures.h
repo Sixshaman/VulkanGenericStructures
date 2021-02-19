@@ -1011,6 +1011,53 @@ static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12
 	static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_FUNCTIONS_2_FEATURES_INTEL;
 #endif
 
+#if defined(VK_KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME)
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkWriteDescriptorSetAccelerationStructureKHR> = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceAccelerationStructureFeaturesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceAccelerationStructurePropertiesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_PROPERTIES_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureGeometryTrianglesDataKHR> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureGeometryAabbsDataKHR> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_AABBS_DATA_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureGeometryInstancesDataKHR> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureGeometryKHR> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureBuildGeometryInfoKHR> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureCreateInfoKHR> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureDeviceAddressInfoKHR> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureVersionInfoKHR> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_VERSION_INFO_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkCopyAccelerationStructureInfoKHR> = VK_STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_INFO_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkCopyAccelerationStructureToMemoryInfoKHR> = VK_STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_TO_MEMORY_INFO_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkCopyMemoryToAccelerationStructureInfoKHR> = VK_STRUCTURE_TYPE_COPY_MEMORY_TO_ACCELERATION_STRUCTURE_INFO_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureBuildSizesInfoKHR> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_SIZES_INFO_KHR;
+#endif
+
 #if defined(VK_KHR_COPY_COMMANDS_2_EXTENSION_NAME)
 	template<>
 	static constexpr VulkanStructureType ValidStructureType<VkBufferCopy2KHR> = VK_STRUCTURE_TYPE_BUFFER_COPY_2_KHR;
@@ -1199,9 +1246,36 @@ static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12
 	static constexpr VulkanStructureType ValidStructureType<VkPipelineExecutableInternalRepresentationKHR> = VK_STRUCTURE_TYPE_PIPELINE_EXECUTABLE_INTERNAL_REPRESENTATION_KHR;
 #endif
 
+#if defined(VK_KHR_PIPELINE_LIBRARY_EXTENSION_NAME)
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkPipelineLibraryCreateInfoKHR> = VK_STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR;
+#endif
+
 #if defined(VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME)
 	template<>
 	static constexpr VulkanStructureType ValidStructureType<VkPhysicalDevicePushDescriptorPropertiesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR;
+#endif
+
+#if defined(VK_KHR_RAY_QUERY_EXTENSION_NAME)
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceRayQueryFeaturesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_QUERY_FEATURES_KHR;
+#endif
+
+#if defined(VK_KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME)
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkRayTracingShaderGroupCreateInfoKHR> = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkRayTracingPipelineCreateInfoKHR> = VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceRayTracingPipelineFeaturesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_FEATURES_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceRayTracingPipelinePropertiesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_PROPERTIES_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkRayTracingPipelineInterfaceCreateInfoKHR> = VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_INTERFACE_CREATE_INFO_KHR;
 #endif
 
 #if defined(VK_KHR_SHADER_CLOCK_EXTENSION_NAME)
@@ -1230,6 +1304,48 @@ static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12
 
 	template<>
 	static constexpr VulkanStructureType ValidStructureType<VkPresentInfoKHR> = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+#endif
+
+#if defined(VK_KHR_SYNCHRONIZATION_2_EXTENSION_NAME)
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkMemoryBarrier2KHR> = VK_STRUCTURE_TYPE_MEMORY_BARRIER_2_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkImageMemoryBarrier2KHR> = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkBufferMemoryBarrier2KHR> = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkDependencyInfoKHR> = VK_STRUCTURE_TYPE_DEPENDENCY_INFO_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkSemaphoreSubmitInfoKHR> = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkCommandBufferSubmitInfoKHR> = VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkSubmitInfo2KHR> = VK_STRUCTURE_TYPE_SUBMIT_INFO_2_KHR;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkQueueFamilyCheckpointProperties2NV> = VK_STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkCheckpointData2NV> = VK_STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceSynchronization2FeaturesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES_KHR;
+#endif
+
+#if defined(VK_KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME)
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_FEATURES_KHR;
+#endif
+
+#if defined(VK_KHR_ZERO_INITIALIZE_WORKGROUP_MEMORY_EXTENSION_NAME)
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeaturesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_WORKGROUP_MEMORY_FEATURES_KHR;
 #endif
 
 #if defined(VK_NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME)
@@ -1358,6 +1474,17 @@ static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12
 	static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV;
 #endif
 
+#if defined(VK_NV_FRAGMENT_SHADING_RATE_ENUMS_EXTENSION_NAME)
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_ENUMS_FEATURES_NV;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceFragmentShadingRateEnumsPropertiesNV> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_ENUMS_PROPERTIES_NV;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkPipelineFragmentShadingRateEnumStateCreateInfoNV> = VK_STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_ENUM_STATE_CREATE_INFO_NV;
+#endif
+
 #if defined(VK_NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME)
 	template<>
 	static constexpr VulkanStructureType ValidStructureType<VkPipelineCoverageModulationStateCreateInfoNV> = VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV;
@@ -1392,6 +1519,12 @@ static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12
 
 	template<>
 	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureCreateInfoNV> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_NV;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkBindAccelerationStructureMemoryInfoNV> = VK_STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkWriteDescriptorSetAccelerationStructureNV> = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV;
 
 	template<>
 	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureMemoryRequirementsInfoNV> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV;
@@ -1456,14 +1589,17 @@ static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12
 	static constexpr VulkanStructureType ValidStructureType<VkCommandBufferInheritanceRenderPassTransformInfoQCOM> = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM;
 #endif
 
-#if defined(VK_KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME) && defined(VK_ENABLE_BETA_EXTENSIONS)
+#if defined(VK_QCOM_ROTATED_COPY_COMMANDS_EXTENSION_NAME)
 	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkDeferredOperationInfoKHR> = VK_STRUCTURE_TYPE_DEFERRED_OPERATION_INFO_KHR;
+	static constexpr VulkanStructureType ValidStructureType<VkCopyCommandTransformInfoQCOM> = VK_STRUCTURE_TYPE_COPY_COMMAND_TRANSFORM_INFO_QCOM;
 #endif
 
-#if defined(VK_KHR_PIPELINE_LIBRARY_EXTENSION_NAME) && defined(VK_ENABLE_BETA_EXTENSIONS)
+#if defined(VK_VALVE_MUTABLE_DESCRIPTOR_TYPE_EXTENSION_NAME)
 	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkPipelineLibraryCreateInfoKHR> = VK_STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR;
+	static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceMutableDescriptorTypeFeaturesVALVE> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MUTABLE_DESCRIPTOR_TYPE_FEATURES_VALVE;
+
+	template<>
+	static constexpr VulkanStructureType ValidStructureType<VkMutableDescriptorTypeCreateInfoVALVE> = VK_STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_VALVE;
 #endif
 
 #if defined(VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME) && defined(VK_ENABLE_BETA_EXTENSIONS)
@@ -1472,68 +1608,6 @@ static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12
 
 	template<>
 	static constexpr VulkanStructureType ValidStructureType<VkPhysicalDevicePortabilitySubsetPropertiesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_PROPERTIES_KHR;
-#endif
-
-#if defined(VK_KHR_RAY_TRACING_EXTENSION_NAME) && defined(VK_ENABLE_BETA_EXTENSIONS)
-	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkRayTracingShaderGroupCreateInfoKHR> = VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_KHR;
-
-	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkRayTracingPipelineCreateInfoKHR> = VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_KHR;
-
-	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkBindAccelerationStructureMemoryInfoKHR> = VK_STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_KHR;
-
-	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkWriteDescriptorSetAccelerationStructureKHR> = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR;
-
-	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureMemoryRequirementsInfoKHR> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_KHR;
-
-	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceRayTracingFeaturesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_FEATURES_KHR;
-
-	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceRayTracingPropertiesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_KHR;
-
-	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureGeometryTrianglesDataKHR> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR;
-
-	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureGeometryAabbsDataKHR> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_AABBS_DATA_KHR;
-
-	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureGeometryInstancesDataKHR> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR;
-
-	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureGeometryKHR> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR;
-
-	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureBuildGeometryInfoKHR> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR;
-
-	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureCreateGeometryTypeInfoKHR> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_GEOMETRY_TYPE_INFO_KHR;
-
-	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureCreateInfoKHR> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_KHR;
-
-	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureDeviceAddressInfoKHR> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DEVICE_ADDRESS_INFO_KHR;
-
-	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkAccelerationStructureVersionKHR> = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_VERSION_KHR;
-
-	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkCopyAccelerationStructureInfoKHR> = VK_STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_INFO_KHR;
-
-	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkCopyAccelerationStructureToMemoryInfoKHR> = VK_STRUCTURE_TYPE_COPY_ACCELERATION_STRUCTURE_TO_MEMORY_INFO_KHR;
-
-	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkCopyMemoryToAccelerationStructureInfoKHR> = VK_STRUCTURE_TYPE_COPY_MEMORY_TO_ACCELERATION_STRUCTURE_INFO_KHR;
-
-	template<>
-	static constexpr VulkanStructureType ValidStructureType<VkRayTracingPipelineInterfaceCreateInfoKHR> = VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_INTERFACE_CREATE_INFO_KHR;
 #endif
 
 #if defined(VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME) && defined(VK_USE_PLATFORM_ANDROID_KHR)
