@@ -66,7 +66,7 @@ namespace vgs
 using VulkanStructureType = VkStructureType;
 
 template<typename VkStruct>
-static constexpr VulkanStructureType ValidStructureType = VK_STRUCTURE_TYPE_MAX_ENUM;
+constexpr VulkanStructureType ValidStructureType = VK_STRUCTURE_TYPE_MAX_ENUM;
 """
 
 header_start_hpp = """\
@@ -84,18 +84,18 @@ namespace vgs
 using VulkanStructureType = vk::StructureType;
 
 template<typename VkStruct>
-static constexpr VulkanStructureType ValidStructureType = VkStruct::structureType;
+constexpr VulkanStructureType ValidStructureType = VkStruct::structureType;
 """
 
 header_stype_init_h = """\
-static inline void InitSType(void* ptr, ptrdiff_t offset, VulkanStructureType value)
+inline void InitSType(void* ptr, ptrdiff_t offset, VulkanStructureType value)
 {
 	memcpy((std::byte*)ptr + offset, &value, sizeof(VulkanStructureType));
 }
 """
 
 header_stype_init_hpp = """\
-static inline void InitSType(void* ptr, ptrdiff_t offset, VulkanStructureType value)
+inline void InitSType(void* ptr, ptrdiff_t offset, VulkanStructureType value)
 {
 }
 """
@@ -792,7 +792,7 @@ def compile_cpp_header_h(stypes):
 
 	    cpp_data += "\n"
 	    cpp_data += tab_level + "template<>\n"
-	    cpp_data += tab_level + "static constexpr VulkanStructureType ValidStructureType<" + stype[0] + "> = " + stype[1] + ";\n"
+	    cpp_data += tab_level + "constexpr VulkanStructureType ValidStructureType<" + stype[0] + "> = " + stype[1] + ";\n"
 
 	if current_extension_define != "" or current_platform_define != "":
 	    cpp_data += "#endif\n\n"

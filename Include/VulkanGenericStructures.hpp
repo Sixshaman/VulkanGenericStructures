@@ -36,8 +36,8 @@ namespace vgs
 using VulkanStructureType = vk::StructureType;
 
 template<typename VkStruct>
-static constexpr VulkanStructureType ValidStructureType = VkStruct::structureType;
-static inline void InitSType(void* ptr, ptrdiff_t offset, VulkanStructureType value)
+constexpr VulkanStructureType ValidStructureType = VkStruct::structureType;
+inline void InitSType(void* ptr, ptrdiff_t offset, VulkanStructureType value)
 {
 }
 
