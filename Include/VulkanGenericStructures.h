@@ -820,7 +820,9 @@ constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12Propert
 
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkImageDrmFormatModifierPropertiesEXT> = VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT;
+#endif
 
+#if defined(VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME) && defined(VK_KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME)
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkDrmFormatModifierPropertiesList2EXT> = VK_STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_2_EXT;
 #endif
@@ -1201,10 +1203,12 @@ constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12Propert
 	constexpr VulkanStructureType ValidStructureType<VkResolveImageInfo2KHR> = VK_STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2_KHR;
 #endif
 
-#if defined(VK_KHR_DEVICE_GROUP_EXTENSION_NAME)
+#if defined(VK_KHR_DEVICE_GROUP_EXTENSION_NAME) && defined(VK_KHR_SURFACE_EXTENSION_NAME)
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkDeviceGroupPresentCapabilitiesKHR> = VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR;
+#endif
 
+#if defined(VK_KHR_DEVICE_GROUP_EXTENSION_NAME) && defined(VK_KHR_SWAPCHAIN_EXTENSION_NAME)
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkImageSwapchainCreateInfoKHR> = VK_STRUCTURE_TYPE_IMAGE_SWAPCHAIN_CREATE_INFO_KHR;
 
@@ -1482,13 +1486,15 @@ constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12Propert
 	constexpr VulkanStructureType ValidStructureType<VkSubmitInfo2KHR> = VK_STRUCTURE_TYPE_SUBMIT_INFO_2_KHR;
 
 	template<>
+	constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceSynchronization2FeaturesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES_KHR;
+#endif
+
+#if defined(VK_KHR_SYNCHRONIZATION_2_EXTENSION_NAME) && defined(VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME)
+	template<>
 	constexpr VulkanStructureType ValidStructureType<VkQueueFamilyCheckpointProperties2NV> = VK_STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV;
 
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkCheckpointData2NV> = VK_STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV;
-
-	template<>
-	constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceSynchronization2FeaturesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES_KHR;
 #endif
 
 #if defined(VK_KHR_WORKGROUP_MEMORY_EXPLICIT_LAYOUT_EXTENSION_NAME)
@@ -1992,7 +1998,9 @@ constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12Propert
 
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkExternalFormatANDROID> = VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID;
+#endif
 
+#if defined(VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME) && defined(VK_KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME) && defined(VK_USE_PLATFORM_ANDROID_KHR)
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkAndroidHardwareBufferFormatProperties2ANDROID> = VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_2_ANDROID;
 #endif
@@ -2119,10 +2127,12 @@ constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12Propert
 	constexpr VulkanStructureType ValidStructureType<VkSurfaceFullScreenExclusiveInfoEXT> = VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_INFO_EXT;
 
 	template<>
-	constexpr VulkanStructureType ValidStructureType<VkSurfaceFullScreenExclusiveWin32InfoEXT> = VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT;
-
-	template<>
 	constexpr VulkanStructureType ValidStructureType<VkSurfaceCapabilitiesFullScreenExclusiveEXT> = VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_FULL_SCREEN_EXCLUSIVE_EXT;
+#endif
+
+#if defined(VK_EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME) && defined(VK_KHR_WIN32_SURFACE_EXTENSION_NAME) && defined(VK_USE_PLATFORM_WIN32_KHR)
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkSurfaceFullScreenExclusiveWin32InfoEXT> = VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT;
 #endif
 
 #if defined(VK_KHR_EXTERNAL_FENCE_WIN32_EXTENSION_NAME) && defined(VK_USE_PLATFORM_WIN32_KHR)
@@ -2217,17 +2227,17 @@ public:
 	Struct& GetDataAs();
 
 	std::byte* GetStructureData() const;
-	size_t     GetStructureSize() const;
+	size_t	 GetStructureSize() const;
 
 	ptrdiff_t GetPNextOffset() const;
-	void*     GetPNext()       const;
+	void*	 GetPNext()	   const;
 
-	ptrdiff_t           GetSTypeOffset() const;
-	VulkanStructureType GetSType()       const;
+	ptrdiff_t		   GetSTypeOffset() const;
+	VulkanStructureType GetSType()	   const;
 
 protected:
 	std::byte* StructureData;
-	size_t     StructureSize;
+	size_t	 StructureSize;
 
 	ptrdiff_t PNextPointerOffset;
 	ptrdiff_t STypeOffset;
@@ -2324,9 +2334,9 @@ inline GenericStruct::GenericStruct(const GenericStruct& right): GenericStructBa
 
 inline GenericStruct& GenericStruct::operator=(const GenericStruct& right)
 {
-	StructureData      = right.StructureData;
-	StructureSize      = right.StructureSize;
-	STypeOffset        = right.STypeOffset;
+	StructureData	  = right.StructureData;
+	StructureSize	  = right.StructureSize;
+	STypeOffset		= right.STypeOffset;
 	PNextPointerOffset = right.PNextPointerOffset;
 
 	return *this;
@@ -2361,7 +2371,7 @@ private:
 inline StructureBlob::StructureBlob()
 {
 	PNextPointerOffset = 0;
-	STypeOffset        = 0;
+	STypeOffset		= 0;
 
 	StructureData = nullptr;
 	StructureSize = 0;
@@ -2373,7 +2383,7 @@ inline StructureBlob::StructureBlob(const Struct& structure)
 	static_assert(std::is_trivially_destructible<Struct>::value, "Structure blob contents must be trivially destructible");
 
 	PNextPointerOffset = offsetof(Struct, pNext);
-	STypeOffset        = offsetof(Struct, sType);
+	STypeOffset		= offsetof(Struct, sType);
 
 	StructureBlobData.resize(sizeof(Struct));
 	memcpy(StructureBlobData.data(), &structure, sizeof(Struct));
@@ -2401,7 +2411,7 @@ inline StructureBlob& StructureBlob::operator=(const StructureBlob& right)
 	StructureData = StructureBlobData.data();
 	StructureSize = StructureBlobData.size();
 
-	STypeOffset        = right.STypeOffset;
+	STypeOffset		= right.STypeOffset;
 	PNextPointerOffset = right.PNextPointerOffset;
 
 	assert(PNextPointerOffset + sizeof(void*) <= StructureBlobData.size());
@@ -2580,7 +2590,7 @@ inline void GenericStructureChain<HeadType>::AppendDataToChain(void* dataPtr, si
 	PNextPointerOffsets.push_back(pNextOffset);
 
 	std::byte* currLastStructPtr = StructureDataPointers.back();
-	InitSType(dataPtr, sTypeOffset, sType);                                           //Set sType of the current struct
+	InitSType(dataPtr, sTypeOffset, sType);										   //Set sType of the current struct
 	memcpy(prevLastStruct + prevPNextOffset, &currLastStructPtr, sizeof(std::byte*)); //Set pNext pointer of the previous struct
 
 	StructureDataIndices[sType] = StructureDataPointers.size() - 1;
@@ -2611,7 +2621,7 @@ public:
 	void AppendToChainGeneric(const GenericStructBase& nextBlobData);
 
 public:
-	StructureChainBlob(const StructureChainBlob& rhs)            = delete;
+	StructureChainBlob(const StructureChainBlob& rhs)			= delete;
 	StructureChainBlob& operator=(const StructureChainBlob& rhs) = delete;
 
 private:
@@ -2657,7 +2667,7 @@ inline StructureChainBlob<HeadType>::StructureChainBlob(const HeadType& head)
 	PNextPointerOffsets.push_back(offsetof(HeadType, pNext));
 
 	VulkanStructureType headSType = ValidStructureType<HeadType>;
-	void*               headPNext = nullptr;
+	void*			   headPNext = nullptr;
 
 	InitSType(StructureDataPointers.back(), STypeOffsets.back(), headSType);
 	memcpy(StructureDataPointers.back() + PNextPointerOffsets.back(), &headPNext, sizeof(void*));
@@ -2722,8 +2732,8 @@ inline void StructureChainBlob<HeadType>::AppendDataToBlob(const std::byte* data
 
 	//Copy all current structures to the new chain, and append new structure
 	std::vector<std::byte> newStructureChainData(prevDataSize + dataSize);
-	memcpy(newStructureChainData.data(),                StructureChainBlobData.data(), prevDataSize);
-	memcpy(newStructureChainData.data() + prevDataSize, data,                          dataSize);
+	memcpy(newStructureChainData.data(),				StructureChainBlobData.data(), prevDataSize);
+	memcpy(newStructureChainData.data() + prevDataSize, data,						  dataSize);
 
 	//Initialize sType
 	InitSType(newStructureChainData.data() + prevDataSize, dataSTypeOffset, sType);
@@ -2732,13 +2742,13 @@ inline void StructureChainBlob<HeadType>::AppendDataToBlob(const std::byte* data
 	std::vector<ptrdiff_t> structureDataOffsets(StructureDataPointers.size());
 	for(size_t i = 0; i < StructureDataPointers.size(); i++)
 	{
-	    structureDataOffsets[i] = (StructureDataPointers[i] - &StructureChainBlobData[0]);
+		structureDataOffsets[i] = (StructureDataPointers[i] - &StructureChainBlobData[0]);
 	}
 
 	StructureDataPointers.clear();
 	for(size_t i = 0; i < structureDataOffsets.size(); i++)
 	{
-	    StructureDataPointers.push_back(newStructureChainData.data() + structureDataOffsets[i]);
+		StructureDataPointers.push_back(newStructureChainData.data() + structureDataOffsets[i]);
 	}
 
 	StructureDataPointers.push_back(newStructureChainData.data() + nextDataOffset);
@@ -2748,8 +2758,8 @@ inline void StructureChainBlob<HeadType>::AppendDataToBlob(const std::byte* data
 	//Invalidate pNext pointers
 	for(size_t i = 0; i < PNextPointerOffsets.size() - 1; i++)
 	{
-	    void** currPPNext = (void**)(StructureDataPointers[i] + PNextPointerOffsets[i]);
-	    memcpy(currPPNext, &StructureDataPointers[i + 1], sizeof(void*));
+		void** currPPNext = (void**)(StructureDataPointers[i] + PNextPointerOffsets[i]);
+		memcpy(currPPNext, &StructureDataPointers[i + 1], sizeof(void*));
 	}
 
 	//Invalidate the last pNext pointer with the provided one
@@ -2762,10 +2772,10 @@ inline void StructureChainBlob<HeadType>::AppendDataToBlob(const std::byte* data
 	//Make sure all pNext point to inside of StructureChainBlobData. The last pointer can point to whatever the user specified
 	for(size_t i = 0; i < PNextPointerOffsets.size() - 1; i++)
 	{
-	    void* pNextPointer = nullptr;
-	    memcpy(&pNextPointer, StructureDataPointers[i] + PNextPointerOffsets[i], sizeof(void*)); //Init the pointer data
+		void* pNextPointer = nullptr;
+		memcpy(&pNextPointer, StructureDataPointers[i] + PNextPointerOffsets[i], sizeof(void*)); //Init the pointer data
 
-	    assert(pNextPointer >= &StructureChainBlobData[0] && pNextPointer < (&StructureChainBlobData[0] + StructureChainBlobData.size())); //Move semantics should never break pNext pointers, they should always point to inside the blob
+		assert(pNextPointer >= &StructureChainBlobData[0] && pNextPointer < (&StructureChainBlobData[0] + StructureChainBlobData.size())); //Move semantics should never break pNext pointers, they should always point to inside the blob
 	}
 
 	StructureDataIndices[sType] = StructureDataPointers.size() - 1;

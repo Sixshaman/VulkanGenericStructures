@@ -117,17 +117,17 @@ public:
 	Struct& GetDataAs();
 
 	std::byte* GetStructureData() const;
-	size_t     GetStructureSize() const;
+	size_t	 GetStructureSize() const;
 
 	ptrdiff_t GetPNextOffset() const;
-	void*     GetPNext()       const;
+	void*	 GetPNext()	   const;
 
-	ptrdiff_t           GetSTypeOffset() const;
-	VulkanStructureType GetSType()       const;
+	ptrdiff_t		   GetSTypeOffset() const;
+	VulkanStructureType GetSType()	   const;
 
 protected:
 	std::byte* StructureData;
-	size_t     StructureSize;
+	size_t	 StructureSize;
 
 	ptrdiff_t PNextPointerOffset;
 	ptrdiff_t STypeOffset;
@@ -224,9 +224,9 @@ inline GenericStruct::GenericStruct(const GenericStruct& right): GenericStructBa
 
 inline GenericStruct& GenericStruct::operator=(const GenericStruct& right)
 {
-	StructureData      = right.StructureData;
-	StructureSize      = right.StructureSize;
-	STypeOffset        = right.STypeOffset;
+	StructureData	  = right.StructureData;
+	StructureSize	  = right.StructureSize;
+	STypeOffset		= right.STypeOffset;
 	PNextPointerOffset = right.PNextPointerOffset;
 
 	return *this;
@@ -261,7 +261,7 @@ private:
 inline StructureBlob::StructureBlob()
 {
 	PNextPointerOffset = 0;
-	STypeOffset        = 0;
+	STypeOffset		= 0;
 
 	StructureData = nullptr;
 	StructureSize = 0;
@@ -273,7 +273,7 @@ inline StructureBlob::StructureBlob(const Struct& structure)
 	static_assert(std::is_trivially_destructible<Struct>::value, "Structure blob contents must be trivially destructible");
 
 	PNextPointerOffset = offsetof(Struct, pNext);
-	STypeOffset        = offsetof(Struct, sType);
+	STypeOffset		= offsetof(Struct, sType);
 
 	StructureBlobData.resize(sizeof(Struct));
 	memcpy(StructureBlobData.data(), &structure, sizeof(Struct));
@@ -301,7 +301,7 @@ inline StructureBlob& StructureBlob::operator=(const StructureBlob& right)
 	StructureData = StructureBlobData.data();
 	StructureSize = StructureBlobData.size();
 
-	STypeOffset        = right.STypeOffset;
+	STypeOffset		= right.STypeOffset;
 	PNextPointerOffset = right.PNextPointerOffset;
 
 	assert(PNextPointerOffset + sizeof(void*) <= StructureBlobData.size());
@@ -480,7 +480,7 @@ inline void GenericStructureChain<HeadType>::AppendDataToChain(void* dataPtr, si
 	PNextPointerOffsets.push_back(pNextOffset);
 
 	std::byte* currLastStructPtr = StructureDataPointers.back();
-	InitSType(dataPtr, sTypeOffset, sType);                                           //Set sType of the current struct
+	InitSType(dataPtr, sTypeOffset, sType);										   //Set sType of the current struct
 	memcpy(prevLastStruct + prevPNextOffset, &currLastStructPtr, sizeof(std::byte*)); //Set pNext pointer of the previous struct
 
 	StructureDataIndices[sType] = StructureDataPointers.size() - 1;
@@ -511,7 +511,7 @@ public:
 	void AppendToChainGeneric(const GenericStructBase& nextBlobData);
 
 public:
-	StructureChainBlob(const StructureChainBlob& rhs)            = delete;
+	StructureChainBlob(const StructureChainBlob& rhs)			= delete;
 	StructureChainBlob& operator=(const StructureChainBlob& rhs) = delete;
 
 private:
@@ -557,7 +557,7 @@ inline StructureChainBlob<HeadType>::StructureChainBlob(const HeadType& head)
 	PNextPointerOffsets.push_back(offsetof(HeadType, pNext));
 
 	VulkanStructureType headSType = ValidStructureType<HeadType>;
-	void*               headPNext = nullptr;
+	void*			   headPNext = nullptr;
 
 	InitSType(StructureDataPointers.back(), STypeOffsets.back(), headSType);
 	memcpy(StructureDataPointers.back() + PNextPointerOffsets.back(), &headPNext, sizeof(void*));
@@ -622,8 +622,8 @@ inline void StructureChainBlob<HeadType>::AppendDataToBlob(const std::byte* data
 
 	//Copy all current structures to the new chain, and append new structure
 	std::vector<std::byte> newStructureChainData(prevDataSize + dataSize);
-	memcpy(newStructureChainData.data(),                StructureChainBlobData.data(), prevDataSize);
-	memcpy(newStructureChainData.data() + prevDataSize, data,                          dataSize);
+	memcpy(newStructureChainData.data(),				StructureChainBlobData.data(), prevDataSize);
+	memcpy(newStructureChainData.data() + prevDataSize, data,						  dataSize);
 
 	//Initialize sType
 	InitSType(newStructureChainData.data() + prevDataSize, dataSTypeOffset, sType);
@@ -632,13 +632,13 @@ inline void StructureChainBlob<HeadType>::AppendDataToBlob(const std::byte* data
 	std::vector<ptrdiff_t> structureDataOffsets(StructureDataPointers.size());
 	for(size_t i = 0; i < StructureDataPointers.size(); i++)
 	{
-	    structureDataOffsets[i] = (StructureDataPointers[i] - &StructureChainBlobData[0]);
+		structureDataOffsets[i] = (StructureDataPointers[i] - &StructureChainBlobData[0]);
 	}
 
 	StructureDataPointers.clear();
 	for(size_t i = 0; i < structureDataOffsets.size(); i++)
 	{
-	    StructureDataPointers.push_back(newStructureChainData.data() + structureDataOffsets[i]);
+		StructureDataPointers.push_back(newStructureChainData.data() + structureDataOffsets[i]);
 	}
 
 	StructureDataPointers.push_back(newStructureChainData.data() + nextDataOffset);
@@ -648,8 +648,8 @@ inline void StructureChainBlob<HeadType>::AppendDataToBlob(const std::byte* data
 	//Invalidate pNext pointers
 	for(size_t i = 0; i < PNextPointerOffsets.size() - 1; i++)
 	{
-	    void** currPPNext = (void**)(StructureDataPointers[i] + PNextPointerOffsets[i]);
-	    memcpy(currPPNext, &StructureDataPointers[i + 1], sizeof(void*));
+		void** currPPNext = (void**)(StructureDataPointers[i] + PNextPointerOffsets[i]);
+		memcpy(currPPNext, &StructureDataPointers[i + 1], sizeof(void*));
 	}
 
 	//Invalidate the last pNext pointer with the provided one
@@ -662,10 +662,10 @@ inline void StructureChainBlob<HeadType>::AppendDataToBlob(const std::byte* data
 	//Make sure all pNext point to inside of StructureChainBlobData. The last pointer can point to whatever the user specified
 	for(size_t i = 0; i < PNextPointerOffsets.size() - 1; i++)
 	{
-	    void* pNextPointer = nullptr;
-	    memcpy(&pNextPointer, StructureDataPointers[i] + PNextPointerOffsets[i], sizeof(void*)); //Init the pointer data
+		void* pNextPointer = nullptr;
+		memcpy(&pNextPointer, StructureDataPointers[i] + PNextPointerOffsets[i], sizeof(void*)); //Init the pointer data
 
-	    assert(pNextPointer >= &StructureChainBlobData[0] && pNextPointer < (&StructureChainBlobData[0] + StructureChainBlobData.size())); //Move semantics should never break pNext pointers, they should always point to inside the blob
+		assert(pNextPointer >= &StructureChainBlobData[0] && pNextPointer < (&StructureChainBlobData[0] + StructureChainBlobData.size())); //Move semantics should never break pNext pointers, they should always point to inside the blob
 	}
 
 	StructureDataIndices[sType] = StructureDataPointers.size() - 1;
@@ -678,8 +678,8 @@ inline void StructureChainBlob<HeadType>::AppendDataToBlob(const std::byte* data
 
 def open_vk_spec(url):
 	with urllib.request.urlopen(url) as response:
-	    spec_data = response.read()
-	    return spec_data.decode("utf8")
+		spec_data = response.read()
+		return spec_data.decode("utf8")
 
 def parse_stypes(spec_contents):
 	spec_soup   = BeautifulSoup(spec_contents, features="xml")
@@ -688,73 +688,83 @@ def parse_stypes(spec_contents):
 
 	spec_platforms_block = spec_soup.find("platforms")
 	if spec_platforms_block is not None:
-	    spec_platform_tags = spec_platforms_block.find_all("platform")
-	    for platform_tag in spec_platform_tags:
-	        spec_platform_defines[platform_tag["name"]] = platform_tag["protect"]
+		spec_platform_tags = spec_platforms_block.find_all("platform")
+		for platform_tag in spec_platform_tags:
+			spec_platform_defines[platform_tag["name"]] = platform_tag["protect"]
 
 	spec_struct_extensions = {}
+	extension_define_names = {}
 
 	extension_blocks = spec_soup.find_all("extension")
 	for extension_block in extension_blocks:
-	    extension_name = extension_block["name"]
+		extension_name = extension_block["name"]
 
-	    extension_define_tag = extension_block.find("enum", {"value": re.compile(".*" + extension_name +".*")})
-	    if extension_define_tag is None:
-	        continue
+		extension_define_tag = extension_block.find("enum", {"value": re.compile(".*" + extension_name +".*")})
+		if extension_define_tag is None:
+			continue
 
-	    extension_define = extension_define_tag["name"]
-	    if extension_define is None:
-	        continue
-	    
-	    extension_types = []
-	    extension_type_tags = extension_block.find_all("type")
-	    for type_tag in extension_type_tags:
-	        extension_defined_type = type_tag["name"]
-	        if extension_defined_type is not None:
-	            extension_types.append(extension_defined_type)
+		extension_define_name = extension_define_tag["name"]
+		if extension_define_name is None:
+			continue
 
-	    extension_platform = ""
-	    if "platform" in extension_block.attrs:
-	        extension_platform = extension_block["platform"]
+		extension_define_names[extension_name] = extension_define_name
 
-	    extension_platform_define = ""
-	    if extension_platform in spec_platform_defines:
-	        extension_platform_define = spec_platform_defines[extension_platform]
+		extension_require_blocks = extension_block.find_all("require")
+		for extension_require_block in extension_require_blocks:
+			extension_types = []
 
-	    for extension_type in extension_types:
-	        spec_struct_extensions[extension_type] = (extension_name, extension_define, extension_platform_define)
+			extension_type_tags = extension_require_block.find_all("type")
+			for type_tag in extension_type_tags:
+				extension_defined_type = type_tag["name"]
+				if extension_defined_type is not None:
+					extension_types.append(extension_defined_type)
 
+			extension_platform = ""
+			if "platform" in extension_block.attrs:
+				extension_platform = extension_block["platform"]
+
+			extension_platform_define = ""
+			if extension_platform in spec_platform_defines:
+				extension_platform_define = spec_platform_defines[extension_platform]
+
+			extension_names = [extension_name]
+			if "extension" in extension_require_block.attrs:
+				extension_names.append(extension_require_block["extension"])
+
+			for extension_type in extension_types:
+				spec_struct_extensions[extension_type] = (extension_name, extension_names, extension_platform_define)
+				
 	stypes = []
 
 	struct_blocks = spec_soup.find_all("type", {"category": "struct"})
 	for struct_block in struct_blocks:
-	    struct_type = struct_block["name"]
+		struct_type = struct_block["name"]
 
-	    #Find only structs that have <member> tag with "values" attibute
-	    struct_stype_member_tags = [member_tag for member_tag in struct_block.find_all("member") if "values" in member_tag.attrs]
-	    if len(struct_stype_member_tags) == 0:
-	        continue
+		#Find only structs that have <member> tag with "values" attibute
+		struct_stype_member_tags = [member_tag for member_tag in struct_block.find_all("member") if "values" in member_tag.attrs]
+		if len(struct_stype_member_tags) == 0:
+			continue
 
-	    stype = ""
-	    for member_tag in struct_stype_member_tags:
-	        name_tag = member_tag.find("name")
-	        if name_tag is not None and name_tag.string == "sType":
-	            stype = member_tag["values"]
-	            break
+		stype = ""
+		for member_tag in struct_stype_member_tags:
+			name_tag = member_tag.find("name")
+			if name_tag is not None and name_tag.string == "sType":
+				stype = member_tag["values"]
+				break
 
-	    extension_define = ""
-	    platform_define  = ""
+		extension_defines = []
+		platform_define   = ""
 
-	    if struct_type in spec_struct_extensions:
-	        struct_requires = spec_struct_extensions[struct_type]
+		if struct_type in spec_struct_extensions:
+			struct_requires = spec_struct_extensions[struct_type]
 
-	        extension_define = struct_requires[1]
-	        platform_define  = struct_requires[2]
+			extension_defines = [extension_define_names[extension_name] for extension_name in struct_requires[1]]
+			platform_define   = struct_requires[2]
 
-	    stypes.append((struct_type, stype, extension_define, platform_define))
+		stypes.append((struct_type, stype, extension_defines, platform_define))
 
-	    stypes = sorted(stypes, key=lambda struct_data: struct_data[2])
-	    stypes = sorted(stypes, key=lambda struct_data: struct_data[3])
+		stypes = sorted(stypes, key=lambda struct_data: struct_data[2])
+		stypes = sorted(stypes, key=lambda struct_data: struct_data[3])
 
 	return stypes
 
@@ -764,38 +774,41 @@ def compile_cpp_header_h(stypes):
 	cpp_data += header_license
 	cpp_data += header_start_h
 
-	current_extension_define = ""
-	current_platform_define  = ""
-	tab_level                = ""
+	current_extension_defines = []
+	current_platform_define   = ""
+	tab_level				  = ""
 	for stype in stypes:
-	    if current_extension_define != stype[2] or current_platform_define != stype[3]:
-	        if current_extension_define != "" or current_platform_define != "":
-	            cpp_data += "#endif\n"
-	            tab_level = ""
+		if current_extension_defines != stype[2] or current_platform_define != stype[3]:
+			if len(current_extension_defines) != 0 or current_platform_define != "":
+				cpp_data += "#endif\n"
+				tab_level = ""
 
-	        if stype[2] != "" or stype[3] != "":
-	            tab_level = "\t"
+			if len(stype[2]) != 0 or stype[3] != "":
+				tab_level = "\t"
 
-	            cpp_data += "\n#if "
+				cpp_data += "\n#if "
 
-	            if stype[2] != "":
-	                cpp_data += "defined(" + stype[2] + ")"
+				if len(stype[2]) != 0:
+					cpp_data += "defined(" + stype[2][0] + ")"
 
-	                if stype[3] != "":
-	                    cpp_data += " && "
+					for extra_extension_define in stype[2][1:]:
+						cpp_data += " && defined(" + extra_extension_define + ")"
 
-	            if stype[3] != "":
-	                cpp_data += "defined(" + stype[3] + ")"
+					if stype[3] != "":
+						cpp_data += " && "
 
-	        current_extension_define = stype[2]
-	        current_platform_define  = stype[3]
+				if stype[3] != "":
+					cpp_data += "defined(" + stype[3] + ")"
 
-	    cpp_data += "\n"
-	    cpp_data += tab_level + "template<>\n"
-	    cpp_data += tab_level + "constexpr VulkanStructureType ValidStructureType<" + stype[0] + "> = " + stype[1] + ";\n"
+			current_extension_defines = stype[2]
+			current_platform_define   = stype[3]
 
-	if current_extension_define != "" or current_platform_define != "":
-	    cpp_data += "#endif\n\n"
+		cpp_data += "\n"
+		cpp_data += tab_level + "template<>\n"
+		cpp_data += tab_level + "constexpr VulkanStructureType ValidStructureType<" + stype[0] + "> = " + stype[1] + ";\n"
+
+	if len(current_extension_defines) != 0 or current_platform_define != "":
+		cpp_data += "#endif\n\n"
 
 	cpp_data += header_stype_init_h
 	cpp_data += header_end
@@ -814,11 +827,11 @@ def compile_cpp_header_hpp(stypes):
 
 def save_file(contents, filename):
 	with open(filename, "w", encoding="utf-8") as out_file:
-	    out_file.write(contents)
+		out_file.write(contents)
 
 if __name__ == "__main__":
 	spec_text = open_vk_spec("https://raw.githubusercontent.com/KhronosGroup/Vulkan-Docs/main/xml/vk.xml") #Get it directly from the master branch
-	stypes    = parse_stypes(spec_text)
+	stypes	= parse_stypes(spec_text)
 
 	cpp_header_data_h   = compile_cpp_header_h(stypes)
 	cpp_header_data_hpp = compile_cpp_header_hpp(stypes)
