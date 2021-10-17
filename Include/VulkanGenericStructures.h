@@ -591,6 +591,14 @@ constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12Propert
 	constexpr VulkanStructureType ValidStructureType<VkPipelineColorBlendAdvancedStateCreateInfoEXT> = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT;
 #endif
 
+#if defined(VK_EXT_BORDER_COLOR_SWIZZLE_EXTENSION_NAME)
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkSamplerBorderColorComponentMappingCreateInfoEXT> = VK_STRUCTURE_TYPE_SAMPLER_BORDER_COLOR_COMPONENT_MAPPING_CREATE_INFO_EXT;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceBorderColorSwizzleFeaturesEXT> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BORDER_COLOR_SWIZZLE_FEATURES_EXT;
+#endif
+
 #if defined(VK_EXT_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME)
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceBufferDeviceAddressFeaturesEXT> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT;
@@ -812,6 +820,9 @@ constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12Propert
 
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkImageDrmFormatModifierPropertiesEXT> = VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkDrmFormatModifierPropertiesList2EXT> = VK_STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_2_EXT;
 #endif
 
 #if defined(VK_EXT_IMAGE_ROBUSTNESS_EXTENSION_NAME)
@@ -870,6 +881,11 @@ constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12Propert
 	constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceMultiDrawFeaturesEXT> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTI_DRAW_FEATURES_EXT;
 #endif
 
+#if defined(VK_EXT_PAGEABLE_DEVICE_LOCAL_MEMORY_EXTENSION_NAME)
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PAGEABLE_DEVICE_LOCAL_MEMORY_FEATURES_EXT;
+#endif
+
 #if defined(VK_EXT_PCI_BUS_INFO_EXTENSION_NAME)
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkPhysicalDevicePCIBusInfoPropertiesEXT> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PCI_BUS_INFO_PROPERTIES_EXT;
@@ -888,6 +904,11 @@ constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12Propert
 #if defined(VK_EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME)
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkPipelineCreationFeedbackCreateInfoEXT> = VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT;
+#endif
+
+#if defined(VK_EXT_PRIMITIVE_TOPOLOGY_LIST_RESTART_EXTENSION_NAME)
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_TOPOLOGY_LIST_RESTART_FEATURES_EXT;
 #endif
 
 #if defined(VK_EXT_PRIVATE_DATA_EXTENSION_NAME)
@@ -910,6 +931,11 @@ constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12Propert
 
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkPipelineRasterizationProvokingVertexStateCreateInfoEXT> = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_PROVOKING_VERTEX_STATE_CREATE_INFO_EXT;
+#endif
+
+#if defined(VK_EXT_RGBA10X6_FORMATS_EXTENSION_NAME)
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RGBA10X6_FORMATS_FEATURES_EXT;
 #endif
 
 #if defined(VK_EXT_ROBUSTNESS_2_EXTENSION_NAME)
@@ -935,6 +961,11 @@ constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12Propert
 
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkMultisamplePropertiesEXT> = VK_STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT;
+#endif
+
+#if defined(VK_EXT_SHADER_ATOMIC_FLOAT_2_EXTENSION_NAME)
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_2_FEATURES_EXT;
 #endif
 
 #if defined(VK_EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME)
@@ -1047,9 +1078,14 @@ constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12Propert
 	constexpr VulkanStructureType ValidStructureType<VkPresentTimesInfoGOOGLE> = VK_STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE;
 #endif
 
+#if defined(VK_HUAWEI_INVOCATION_MASK_EXTENSION_NAME)
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceInvocationMaskFeaturesHUAWEI> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INVOCATION_MASK_FEATURES_HUAWEI;
+#endif
+
 #if defined(VK_HUAWEI_SUBPASS_SHADING_EXTENSION_NAME)
 	template<>
-	constexpr VulkanStructureType ValidStructureType<VkSubpassShadingPipelineCreateInfoHUAWEI> = VK_STRUCTURE_TYPE_SUBPASSS_SHADING_PIPELINE_CREATE_INFO_HUAWEI;
+	constexpr VulkanStructureType ValidStructureType<VkSubpassShadingPipelineCreateInfoHUAWEI> = VK_STRUCTURE_TYPE_SUBPASS_SHADING_PIPELINE_CREATE_INFO_HUAWEI;
 
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceSubpassShadingPropertiesHUAWEI> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBPASS_SHADING_PROPERTIES_HUAWEI;
@@ -1225,6 +1261,11 @@ constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12Propert
 	constexpr VulkanStructureType ValidStructureType<VkSemaphoreGetFdInfoKHR> = VK_STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR;
 #endif
 
+#if defined(VK_KHR_FORMAT_FEATURE_FLAGS_2_EXTENSION_NAME)
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkFormatProperties3KHR> = VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_3_KHR;
+#endif
+
 #if defined(VK_KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME)
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkFragmentShadingRateAttachmentInfoKHR> = VK_STRUCTURE_TYPE_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR;
@@ -1275,6 +1316,20 @@ constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12Propert
 	constexpr VulkanStructureType ValidStructureType<VkPresentRegionsKHR> = VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR;
 #endif
 
+#if defined(VK_KHR_MAINTENANCE_4_EXTENSION_NAME)
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkDeviceBufferMemoryRequirementsKHR> = VK_STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS_KHR;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkDeviceImageMemoryRequirementsKHR> = VK_STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS_KHR;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceMaintenance4FeaturesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES_KHR;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceMaintenance4PropertiesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES_KHR;
+#endif
+
 #if defined(VK_KHR_PERFORMANCE_QUERY_EXTENSION_NAME)
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkPhysicalDevicePerformanceQueryFeaturesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_QUERY_FEATURES_KHR;
@@ -1323,6 +1378,19 @@ constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12Propert
 	constexpr VulkanStructureType ValidStructureType<VkPipelineLibraryCreateInfoKHR> = VK_STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR;
 #endif
 
+#if defined(VK_KHR_PRESENT_ID_EXTENSION_NAME)
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkPhysicalDevicePresentIdFeaturesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_ID_FEATURES_KHR;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkPresentIdKHR> = VK_STRUCTURE_TYPE_PRESENT_ID_KHR;
+#endif
+
+#if defined(VK_KHR_PRESENT_WAIT_EXTENSION_NAME)
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkPhysicalDevicePresentWaitFeaturesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_WAIT_FEATURES_KHR;
+#endif
+
 #if defined(VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME)
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkPhysicalDevicePushDescriptorPropertiesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR;
@@ -1353,6 +1421,14 @@ constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12Propert
 #if defined(VK_KHR_SHADER_CLOCK_EXTENSION_NAME)
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceShaderClockFeaturesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CLOCK_FEATURES_KHR;
+#endif
+
+#if defined(VK_KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME)
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceShaderIntegerDotProductFeaturesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES_KHR;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceShaderIntegerDotProductPropertiesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES_KHR;
 #endif
 
 #if defined(VK_KHR_SHADER_SUBGROUP_UNIFORM_CONTROL_FLOW_EXTENSION_NAME)
@@ -1550,6 +1626,14 @@ constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12Propert
 
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkExportMemoryAllocateInfoNV> = VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV;
+#endif
+
+#if defined(VK_NV_EXTERNAL_MEMORY_RDMA_EXTENSION_NAME)
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceExternalMemoryRDMAFeaturesNV> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_RDMA_FEATURES_NV;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkMemoryGetRemoteAddressInfoNV> = VK_STRUCTURE_TYPE_MEMORY_GET_REMOTE_ADDRESS_INFO_NV;
 #endif
 
 #if defined(VK_NV_FRAGMENT_COVERAGE_TO_COLOR_EXTENSION_NAME)
@@ -1787,6 +1871,38 @@ constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12Propert
 	constexpr VulkanStructureType ValidStructureType<VkVideoEncodeH264NaluSliceEXT> = VK_STRUCTURE_TYPE_VIDEO_ENCODE_H264_NALU_SLICE_EXT;
 #endif
 
+#if defined(VK_EXT_VIDEO_ENCODE_H265_EXTENSION_NAME) && defined(VK_ENABLE_BETA_EXTENSIONS)
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkVideoEncodeH265CapabilitiesEXT> = VK_STRUCTURE_TYPE_VIDEO_ENCODE_H265_CAPABILITIES_EXT;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkVideoEncodeH265SessionCreateInfoEXT> = VK_STRUCTURE_TYPE_VIDEO_ENCODE_H265_SESSION_CREATE_INFO_EXT;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkVideoEncodeH265SessionParametersAddInfoEXT> = VK_STRUCTURE_TYPE_VIDEO_ENCODE_H265_SESSION_PARAMETERS_ADD_INFO_EXT;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkVideoEncodeH265SessionParametersCreateInfoEXT> = VK_STRUCTURE_TYPE_VIDEO_ENCODE_H265_SESSION_PARAMETERS_CREATE_INFO_EXT;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkVideoEncodeH265VclFrameInfoEXT> = VK_STRUCTURE_TYPE_VIDEO_ENCODE_H265_VCL_FRAME_INFO_EXT;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkVideoEncodeH265EmitPictureParametersEXT> = VK_STRUCTURE_TYPE_VIDEO_ENCODE_H265_EMIT_PICTURE_PARAMETERS_EXT;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkVideoEncodeH265NaluSliceEXT> = VK_STRUCTURE_TYPE_VIDEO_ENCODE_H265_NALU_SLICE_EXT;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkVideoEncodeH265ProfileEXT> = VK_STRUCTURE_TYPE_VIDEO_ENCODE_H265_PROFILE_EXT;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkVideoEncodeH265DpbSlotInfoEXT> = VK_STRUCTURE_TYPE_VIDEO_ENCODE_H265_DPB_SLOT_INFO_EXT;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkVideoEncodeH265ReferenceListsEXT> = VK_STRUCTURE_TYPE_VIDEO_ENCODE_H265_REFERENCE_LISTS_EXT;
+#endif
+
 #if defined(VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME) && defined(VK_ENABLE_BETA_EXTENSIONS)
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkPhysicalDevicePortabilitySubsetFeaturesKHR> = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PORTABILITY_SUBSET_FEATURES_KHR;
@@ -1876,9 +1992,12 @@ constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12Propert
 
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkExternalFormatANDROID> = VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkAndroidHardwareBufferFormatProperties2ANDROID> = VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_2_ANDROID;
 #endif
 
-#if defined(VK_ANDROID_NATIVE_BUFFER_NAME) && defined(VK_USE_PLATFORM_ANDROID_KHR)
+#if defined(VK_ANDROID_NATIVE_BUFFER_EXTENSION_NAME) && defined(VK_USE_PLATFORM_ANDROID_KHR)
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkNativeBufferANDROID> = VK_STRUCTURE_TYPE_NATIVE_BUFFER_ANDROID;
 
@@ -1897,6 +2016,38 @@ constexpr VulkanStructureType ValidStructureType<VkPhysicalDeviceVulkan12Propert
 #if defined(VK_EXT_DIRECTFB_SURFACE_EXTENSION_NAME) && defined(VK_USE_PLATFORM_DIRECTFB_EXT)
 	template<>
 	constexpr VulkanStructureType ValidStructureType<VkDirectFBSurfaceCreateInfoEXT> = VK_STRUCTURE_TYPE_DIRECTFB_SURFACE_CREATE_INFO_EXT;
+#endif
+
+#if defined(VK_FUCHSIA_BUFFER_COLLECTION_EXTENSION_NAME) && defined(VK_USE_PLATFORM_FUCHSIA)
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkImportMemoryBufferCollectionFUCHSIA> = VK_STRUCTURE_TYPE_IMPORT_MEMORY_BUFFER_COLLECTION_FUCHSIA;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkBufferCollectionImageCreateInfoFUCHSIA> = VK_STRUCTURE_TYPE_BUFFER_COLLECTION_IMAGE_CREATE_INFO_FUCHSIA;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkBufferCollectionBufferCreateInfoFUCHSIA> = VK_STRUCTURE_TYPE_BUFFER_COLLECTION_BUFFER_CREATE_INFO_FUCHSIA;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkBufferCollectionCreateInfoFUCHSIA> = VK_STRUCTURE_TYPE_BUFFER_COLLECTION_CREATE_INFO_FUCHSIA;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkBufferCollectionPropertiesFUCHSIA> = VK_STRUCTURE_TYPE_BUFFER_COLLECTION_PROPERTIES_FUCHSIA;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkBufferConstraintsInfoFUCHSIA> = VK_STRUCTURE_TYPE_BUFFER_CONSTRAINTS_INFO_FUCHSIA;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkSysmemColorSpaceFUCHSIA> = VK_STRUCTURE_TYPE_SYSMEM_COLOR_SPACE_FUCHSIA;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkImageFormatConstraintsInfoFUCHSIA> = VK_STRUCTURE_TYPE_IMAGE_FORMAT_CONSTRAINTS_INFO_FUCHSIA;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkImageConstraintsInfoFUCHSIA> = VK_STRUCTURE_TYPE_IMAGE_CONSTRAINTS_INFO_FUCHSIA;
+
+	template<>
+	constexpr VulkanStructureType ValidStructureType<VkBufferCollectionConstraintsInfoFUCHSIA> = VK_STRUCTURE_TYPE_BUFFER_COLLECTION_CONSTRAINTS_INFO_FUCHSIA;
 #endif
 
 #if defined(VK_FUCHSIA_EXTERNAL_MEMORY_EXTENSION_NAME) && defined(VK_USE_PLATFORM_FUCHSIA)
